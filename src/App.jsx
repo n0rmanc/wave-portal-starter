@@ -2,6 +2,7 @@ import React, {
   useEffect, useCallback, useState, useMemo,
 } from 'react';
 import './App.css';
+import { ethers } from 'ethers';
 import abi from './utils/WavePortal.json';
 
 function App() {
