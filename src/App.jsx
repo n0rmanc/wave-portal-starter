@@ -1,9 +1,13 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, {
+  useEffect, useCallback, useState, useMemo,
+} from 'react';
 import './App.css';
+import abi from './utils/WavePortal.json';
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('');
-
+  const contractAddress = useMemo(() => '0xe573EEdCE3c23E8EEC4539528B8658d57d68F68e', []);
+  const contractABI = useMemo(() => abi.abi, []);
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
