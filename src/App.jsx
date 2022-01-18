@@ -9,7 +9,7 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState('');
   const contractAddress = useMemo(() => '0xe573EEdCE3c23E8EEC4539528B8658d57d68F68e', []);
   const contractABI = useMemo(() => abi.abi, []);
-  const checkIfWalletIsConnected = async () => {
+  const checkIfWalletIsConnected = useCallback(async () => {
     try {
       const { ethereum } = window;
 
@@ -34,7 +34,7 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   /**
    * Implement your connectWallet method here
@@ -72,7 +72,19 @@ function App() {
           signer,
         );
 
-        const count = await wavePortalContract.getTotalWaves();
+        let count = await wavePortalContract.getTotalWaves();
+        console.log('Retrieved total wave count...', count.toNumber());
+
+        /*
+        * Execute the actual wave from your smart contract
+        */
+        const waveTxn = await wavePortalContract.wave();
+        console.log('Mining...', waveTxn.hash);
+
+        await waveTxn.wait();
+        console.log('Mined -- ', waveTxn.hash);
+
+        count = await wavePortalContract.getTotalWaves();
         console.log('Retrieved total wave count...', count.toNumber());
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -80,14 +92,14 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [contractABI, contractAddress]);
 
   /*
    * This runs our function when the page loads.
    */
   useEffect(() => {
     checkIfWalletIsConnected();
-  }, []);
+  }, [checkIfWalletIsConnected]);
 
   return (
     <div className="mainContainer">
