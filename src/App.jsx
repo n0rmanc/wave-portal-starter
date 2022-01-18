@@ -7,6 +7,7 @@ import abi from './utils/WavePortal.json';
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState('');
+  const [waveCount, setWaveCount] = useState(0);
   const contractAddress = useMemo(() => '0xe573EEdCE3c23E8EEC4539528B8658d57d68F68e', []);
   const contractABI = useMemo(() => abi.abi, []);
   const checkIfWalletIsConnected = useCallback(async () => {
@@ -85,6 +86,7 @@ function App() {
         console.log('Mined -- ', waveTxn.hash);
 
         count = await wavePortalContract.getTotalWaves();
+        setWaveCount(count);
         console.log('Retrieved total wave count...', count.toNumber());
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -104,7 +106,7 @@ function App() {
   return (
     <div className="mainContainer">
       <div className="dataContainer">
-        <div className="header">👋 Hey there!</div>
+        <div className="header">{`👋 Hey there! Waved ${waveCount}`}</div>
 
         <div className="bio">
           I am farza and I worked on self-driving cars so that's pretty cool
